@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Faculty+Glyphic&family=Handjet:wght@100..900&family=Nanum+Myeongjo:wght@400;700;800&display=swap"
+        rel="stylesheet">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #7C1034;
+        margin: 0;
+        padding: 0;
+    }
+
+    .search-container {
+        margin: 20px;
+        text-align: center;
+    }
+
+    #ingredient-input {
+        padding: 10px;
+        width: 350px;
+        margin-right: 10px;
+        border-radius: 20px;
+        border-color: #ff5b92;
+        box-shadow: 5px 5px 10px rgb(22, 22, 22);
+    }
+
+    button {
+        padding: 10px;
+        background-color: #f9fcff;
+        color: #7C1034;
+        border: none;
+        cursor: pointer;
+        border-radius: 16px;
+        box-shadow: 5px 5px 10px rgb(22, 22, 22);
+    }
+
+    button:hover {
+        background-color: #da356c;
+        color: white;
+    }
+
+    .recipes-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .recipe-card {
+        background: #f9fcff;
+        padding: 20px;
+        margin: 10px;
+        border-radius: 5px;
+        width: 250px;
+        text-align: center;
+        border-top-left-radius: 107px;
+    }
+
+    .recipe-card img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+        border-top-left-radius: 35%;
+        border-top-right-radius: 2%;
+    }
+
+    .recipe-card h3 {
+        margin-bottom: 10px;
+        color: #7C1034;
+        font-family: "Nanum Myeongjo", serif;
+        font-weight: 900;
+    }
+
+    .recipe-card p {
+        margin: 5px 0;
+    }
+
+    .recipe-card strong {
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="search-container">
+        <input type="text" id="ingredient-input" placeholder="Search Your Favorite....">
+        <button onclick="findRecipes()">Search</button>
+    </div>
+
+    <div class="recipes-list" id="recipe-list"></div>
+
+    <script>
+        const recipeDatabase = [
+            {
+                name: "Fried Rice",
+                ingredients: ["rice", "vegetables", "protein", "soy sauce", "oil", "garlic", " eggs."],
+                instructions: "Sauté veggies and protein, mix with rice and soy sauce, then stir-fry.",
+                image: "https://i.pinimg.com/736x/11/31/87/1131878ca2194f4b012fbe6cf6c1f127.jpg"
+            },
+            {
+                name: "Paneer Butter Masala",
+                ingredients: ["paneer", "butter", "onion", "tomato", "garlic", "ginger", "cream", "kasuri methi."],
+                instructions: "Sauté onions, garlic, and ginger, add tomatoes and spices, then cook paneer in the gravy.",
+
+                image: "https://i.pinimg.com/736x/09/e4/ac/09e4acfe3778136b196f0202b45f49d5.jpg"
+            },
+            {
+                name: "Chicken Tikka",
+                ingredients: ["chicken", "yogurt", "ginger-garlic paste", "lemon juice", "red chili powder", "turmeric", "garam masala", "salt", "oil"],
+                instructions: "Marinate chicken in the mixture of all ingredients for a few hours, then grill or cook in a pan until done.",
+                image: "https://i.pinimg.com/736x/19/77/e7/1977e7177e1a3667098184485d146f39.jpg"
+            },
+            {
+                name: " Carbonara Pasta",
+                ingredients: ["pasta", "eggs", "pancetta", "Parmesan cheese", "garlic", "black pepper", "olive oil"],
+                instructions: "Cook pasta, sauté pancetta and garlic, mix with beaten eggs, cheese, and pepper, then combine with pasta.",
+                image: "https://i.pinimg.com/736x/0d/7f/83/0d7f831ad3e7a6ee3b65927f72783cb4.jpg"
+            },
+            {
+                name: "Egg soup ",
+                ingredients: ["egg", "broth", "soy sauce", "sesame oil", "green onions", "seasoning"],
+                instructions: " Beat eggs, heat broth, add seasonings, pour in eggs, stir gently, and garnish with green onions.",
+                image: "https://i.pinimg.com/736x/49/72/92/497292bda7b5e5817554aaf237dfcebd.jpg"
+            },
+            {
+                name: "Egg Bhurji ",
+                ingredients: ["egg", "onions", "tomatoes", "green chilies", "ginger", "garlic", "spices", "cilantro", "oil", "salt"],
+                instructions: " Sauté onions, tomatoes, and spices, add beaten eggs, and cook until done, then garnish with cilantro.",
+                image: "https://i.pinimg.com/736x/a5/73/83/a5738332b033f45e9087b30871cf0aa2.jpg"
+            },
+            {
+                name: "mutton Biryani",
+                ingredients: ["mutton", "rice", "onions", "tomatoes", "yogurt", "ginger-garlic paste", "spices", "cilantro", "ghee"],
+                instructions: "Marinate mutton with yogurt and spices, cook rice with whole spices, layer mutton and rice, cook on low heat, and serve hot.",
+
+
+                image: "https://i.pinimg.com/736x/0c/c6/00/0cc60040982745633c1bf24920661740.jpg"
+            },
+            {
+                name: "Egg Curry",
+                ingredients: ["egg", "onions", "tomatoes", "garlic", "ginger", "spices", "oil", "salt", "cilantro."],
+                instructions: "Sauté onions, garlic, and ginger, add tomatoes and spices, cook until thick, add water, simmer, then add boiled eggs and cook through.",
+                image: "https://i.pinimg.com/736x/98/8c/14/988c14d330598ec327e16424a37c36d3.jpg"
+            },
+            {
+                name: "Curd Rice",
+                ingredients: ["rice", "curd (yogurt)", "mustard seeds", "curry leaves", "green chilies", "ginger", "salt."],
+                instructions: "Mix rice with curd, temper mustard seeds, curry leaves, green chilies, and ginger in oil, then add to rice and season with salt.",
+                image: "https://i.pinimg.com/736x/54/ce/ad/54cead7bc6e649cf96187066b58f9eec.jpg"
+            },
+            {
+                name: "Boiled Egg Fry",
+                ingredients: ["egg", "oil", "onion", "tomato", "green chili", "turmeric", "chili powder", "garam masala", "salt."],
+                instructions: " Sauté onion, tomato, and spices, then add halved boiled eggs and fry until golden.",
+                image: "https://i.pinimg.com/736x/08/b8/b9/08b8b93c80377cafe1e8becfda4e7e89.jpg"
+            },
+            {
+                name: " Peri Peri Pasta",
+                ingredients: ["pasta", "peri-peri sauce", "olive oil", "garlic", "onion", "tomatoes", "cream", "seasonings."],
+                instructions: "Cook pasta, sauté garlic, onion, and tomatoes, mix with peri-peri sauce, cream, and seasonings, then toss with pasta.",
+                image: "https://i.pinimg.com/736x/46/4d/a2/464da2f89ab693b09b67795cb8610521.jpg"
+            },
+
+            {
+                name: "Creamy Pesto Pasta",
+                ingredients: ["pasta", "cherry tomatoes", "zucchini", "bell peppers", "olive oil", "garlic", "basil", "parmesan."],
+                instructions: "Cook pasta, sauté veggies and garlic in olive oil, toss with pasta, basil, olives, and parmesan.",
+                image: "https://i.pinimg.com/736x/4e/36/bd/4e36bd6ad9ef45c8f87044b6dd585f8b.jpg"
+            },
+            {
+                name: "Garden Summer Pasta",
+                ingredients: ["pasta", "cherry tomatoes", "cucumber", "bell peppers", "olives", "feta cheese", "olive oil", "lemon juice", "herbs", "salt", "pepper."],
+                instructions: "Cook pasta, mix with fresh cream and cheese, add bacon and garlic.",
+                image: "https://i.pinimg.com/736x/62/91/aa/6291aabba52f88377c3a1223156e4ab1.jpg"
+            },
+            {
+                name: "Chicken Curry",
+                ingredients: ["chicken", "onions", "tomatoes", "garlic", "ginger", "spices oil", "salt", "water."],
+                instructions: " Sauté onions, garlic, and ginger, add chicken and spices, cook, then add tomatoes, water, and simmer until chicken is tender.",
+                image: "https://i.pinimg.com/736x/8c/23/f3/8c23f3cabfaf3aaf1e18ee27edfde5ab.jpg"
+            },
+            {
+                name: "butter Chicken",
+                ingredients: ["chicken", "cream", "butter", "onion", "tomato puree", "garlic", "ginger", "garam masala", "chili powder", "turmeric", "coriander", "sugar", "salt."],
+                instructions: "Marinate chicken in spiced, cook with sautéed onions, garlic, ginger, and spices, add tomato puree, cream, butter, and simmer until creamy.",
+                image: "https://i.pinimg.com/736x/c1/56/96/c156967c09b6734fcd9a79f5b9230dd0.jpg"
+            },
+            {
+                name: "kadai Chicken",
+                ingredients: ["chicken", "yogurt", "tomatoes", "onions", "garlic", "ginger", "green chilies", "coriander", "red chili powder", "garam masala", "salt", "oil."],
+                instructions: "Marinate chicken spices, sauté onions, garlic, and ginger; add tomatoes , toss in marinated chicken, simmer till chicken is cooked and serve hot.",
+                image: "https://i.pinimg.com/236x/2e/73/a1/2e73a1f77b77e27a9251f19978a23c61.jpg"
+            },
+            {
+                name: "Chicken Lollipop",
+                ingredients: ["chicken wings", "ginger-garlic paste", "red chili powder", "turmeric", "soy sauce", "vinegar", "cornflour", "all-purpose flour", "salt", "oil."],
+                instructions: " Marinate chicken wings with spices, coat with a batter of flour and egg, and deep-fry until golden and crispy.",
+                image: "https://i.pinimg.com/736x/b2/c7/e7/b2c7e74848ca8f57a2f5bad085e11152.jpg"
+            },
+            {
+                name: "Mutton Bhuna",
+                ingredients: ["mutton", "onions", "tomatoes", "ginger-garlic paste", "mustard oil", "turmeric", "red chili powder", "garam masala", "salt"],
+                instructions: " Marinate mutton with spices, sauté whole spices in oil, cook onions and ginger-garlic, add tomatoes and dry spices, roast mutton until well-coated.",
+                image: "https://i.pinimg.com/736x/c1/5e/e7/c15ee7ad169ae2c7641d20d1f47e6128.jpg"
+            },
+            {
+                name: "Mutton Nihari",
+                ingredients: ["mutton", "ghee", "onion", "ginger-garlic paste", "Nihari masala", "wheat flour", "water", "salt"],
+                instructions: " Nihari masala, and water, cook till tender, thicken with flour slurry, garnish with coriander and ginger, and serve hot with naan.",
+                image: "https://i.pinimg.com/736x/cc/5f/f6/cc5ff62bc6517e6d694cdb4a036d26b2.jpg"
+            },
+            {
+                name: "Mutton Masala",
+                ingredients: [" mutton", "onion", "tomato", "ginger-garlic paste", "oil", "turmeric", "red chili", "garam masala", "salt", "green chilies"],
+                instructions: "Marinate mutton with spices, sauté onions and spices in oil, add tomatoes, cook marinated mutton.",
+                image: "https://i.pinimg.com/736x/8d/fa/1f/8dfa1ff8a9c5be89da97c731548a5ed7.jpg"
+            },
+            {
+                name: "Mutton Kosha",
+                ingredients: ["mutton", "onions", "tomatoes", "yogurt", "ginger-garlic paste", "mustard oil", "garam masala"],
+                instructions: " Marinate mutton with yogurt and spices, sauté onions, add ginger-garlic paste and tomatoes, cook the mutton until well-roasted, simmer until tender, garnish, and serve.",
+                image: "https://i.pinimg.com/736x/89/4b/a4/894ba4836c563fce84730596ede5cd23.jpg"
+            },
+            {
+                name: "Paneer Biryani",
+                ingredients: ["rice", "paneer", "onions", "tomatoes", "yogurt", "ginger-garlic paste", "green chilies", "biryani masala", "turmeric", "red chili powder", "cinnamon", "cardamom", "cloves", "bay leaves", "mint", "coriander", "saffron", "and ghee."],
+                instructions: "Cook rice, fry paneer, sauté onions, tomatoes, and spices, layer rice and paneer, cook on low heat, and garnish with mint and saffron.",
+                image: "https://i.pinimg.com/736x/62/95/5d/62955d4db7c3fe17c4de8c266ee84861.jpg"
+            },
+
+            {
+                name: "Vegetable Biryani",
+                ingredients: ["rice", "mixed vegetables", "onion", "tomato", "ginger-garlic paste", "turmeric", "red chili powder", "cinnamon", "cloves", "cardamom", "bay leaf", "saffron", "mint", "coriander", "oil", "ghee", "salt."],
+                instructions: " Sauté onions and spices in oil, add veggies, cook with ginger-garlic paste, add rice, yogurt, and water, cook until rice is tender, then garnish with mint, coriander, and saffron.",
+                image: "https://i.pinimg.com/736x/55/40/07/554007c5b5490cb310937d2c7954f0ae.jpg"
+            },
+            {
+                name: "Chicken Biryani",
+                ingredients: ["chicken", "rice", "onions", "tomatoes", "ginger-garlic paste", "garam masala", "cinnamon", "cloves", "cardamom", "bay leaves", "cumin seeds", "mint", "coriander", "salt."],
+                instructions: "Marinate chicken with yogurt, spices; fry onions; cook rice with whole spices; layer cooked chicken and rice, cook on low heat (dum) until done.",
+                image: "https://i.pinimg.com/736x/0e/4d/24/0e4d24cae8c9783ae7c827df7cacb58d.jpg"
+            },
+            {
+                name: "Chilli Chicken",
+                ingredients: ["chicken", "onions", "capsicum", "garlic", "green chilie", "soy sauce", "vinegar", "cornflour", "ginger-garlic paste", "salt", "pepper", "oil"],
+                instructions: "Marinate chicken with ginger-garlic paste, soy sauce, cornflour, salt, and pepper; stir-fry onions, capsicum, garlic, and green chilies in oil, add chicken, cook until tender.",
+                image: "https://i.pinimg.com/736x/00/a6/d3/00a6d30d09900219c9726809d53ac759.jpg"
+            },
+
+            {
+                name: "chilli Beef",
+                ingredients: ["beef", "onions", "green", "ginger-garlic paste", "soy sauce", "vinegar", "sugar", "bell pepper", "salt", "black pepper", "oil"],
+                instructions: "Stir-fry beef, onions, ginger-garlic paste, and chilies, then add soy sauce, and bell pepper, cook until beef is tender.",
+                image: "https://i.pinimg.com/736x/c4/56/3d/c4563d03e4fca43c71922533e2bc750a.jpg"
+            },
+            {
+                name: "Beef Curry",
+                ingredients: ["beef", "onion", "tomato", "ginger-garlic paste", "green chilies", "cumin seeds", "coriander powder", "turmeric", "red chili powder", "garam masala", "oil", "salt", "water"],
+                instructions: "Sauté cumin seeds, onions, ginger-garlic paste, and green chilies in oil, add tomatoes, spices, and cook until soft, then add beef and cook until browned, water, cover, simmer until tender.",
+                image: "https://i.pinimg.com/736x/84/6a/20/846a20e8c69e174051019f35bdb7df8c.jpg"
+            },
+            {
+                name: "Egg Noodles",
+                ingredients: ["egg", "noodles", "oil", "garlic", "vegetables (carrot, bell pepper, cabbage)", "soy sauce", "vinegar", "salt", "pepper"],
+                instructions: " Cook noodles, stir-fry garlic and vegetables in oil, add cooked noodles, soy sauce, vinegar, salt, and pepper, toss, and serve.",
+                image: "https://i.pinimg.com/736x/38/3e/29/383e29f4cb4022436ae1981522247794.jpg"
+            },
+            {
+                name: "Paneer tikka",
+                ingredients: ["paneer", "ginger-garlic paste", "red chili powder", "turmeric", "garam masala lemon juice", "salt", "oil."],
+                instructions: " Mix all ingredients, marinate paneer for 30 minutes, skewer and grill or bake at 200°C for 15-20 minutes, serve with chutney.",
+                image: "https://i.pinimg.com/736x/e1/a5/91/e1a59105bff129316df8c082826939c9.jpg"
+            },
+
+            {
+                name: "Paneer Noodles",
+                ingredients: ["noodles", "paneer", "onions", "capsicum", "carrots", "ginger", "garlic", "soy sauce", "vinegar", "chili sauce", "oil", "salt", "pepper."],
+                instructions: "Cook noodles, stir-fry veggies and paneer, add sauces, mix with noodles, season with salt and pepper, and serve hot.",
+                image: "https://i.pinimg.com/736x/2b/1a/b5/2b1ab5d4eefb2e61c250e34f9d5dad75.jpg"
+            },
+            {
+                name: "veg Noodles",
+                ingredients: ["noodles", "mixed vegetables (carrot, beans, capsicum)", "soy sauce", "vinegar", "garlic", "ginger", "green chilies", "salt", "pepper", "oil"],
+                instructions: "Cook noodles, stir-fry vegetables with garlic, ginger, and green chilies, add soy sauce, vinegar, salt, and pepper, toss with cooked noodles, and serve hot.",
+                image: "https://i.pinimg.com/736x/6a/61/8e/6a618e8058eeafa18d951a3f2ae5b5be.jpg"
+            },
+
+
+            {
+                name: "Jeera Rice",
+                ingredients: ["rice", "cumin seeds", "ghee/oil", "water", "salt"],
+                instructions: "Heat ghee, add cumin seeds, fry till aromatic, add rice, sauté for 2 mins, add water and salt, bring to boil, then simmer until rice is cooked.",
+                image: "https://i.pinimg.com/736x/9d/58/11/9d5811e012c490b990b34fa330015976.jpg"
+            },
+            {
+                name: "ghee Rice",
+                ingredients: ["rice", "ghee", "water", "cumin seeds", "bay leaf", "cloves", "cardamom", "cinnamon stick", "salt", "chopped coriander"],
+                instructions: "Heat ghee, sauté cumin seeds, bay leaf, cloves, cardamom, and cinnamon, add rice, stir for 2 minutes, add water and salt, bring to boil, cover, simmer for 15-20 minutes, and garnish with coriander.",
+                image: "https://i.pinimg.com/736x/8d/98/cc/8d98cc026fc1c57036559e23a79c8fdb.jpg"
+            },
+            {
+                name: "Chicken Noodles",
+                ingredients: ["chicken", "noodles", "onion", "bell pepper", "carrots", "garlic", "soy sauce", "oyster sauce", "chili sauce", "salt and pepper", "oil."],
+                instructions: " chicken, onions, bell pepper, carrots, and garlic in oil, add cooked noodles, soy sauce, oyster sauce, chili sauce, salt, and pepper, and cook until everything is well mixed.",
+                image: "https://i.pinimg.com/736x/c2/e7/21/c2e721dd8638b64ec13cfeaa6051d8e4.jpg"
+            },
+            {
+                name: "lemon Rice",
+                ingredients: ["rice", "lemon juice", "mustard seeds", "urad dal", "chana dal", "dried red chilies", "green chilies", "curry leaves", "turmeric powder", "oil", "salt", "coriander leaves"],
+                instructions: "Cook rice and let it cool, heat oil, add mustard seeds, dals, red chilies, green chilies, curry leaves, turmeric, and sauté, then mix in rice, lemon juice, salt, and garnish with coriander leaves.",
+                image: "https://i.pinimg.com/736x/f2/b1/2d/f2b12d204c9434620926a5bfe23f2208.jpg"
+            }
+
+
+        ];
+
+        function findRecipes() {
+            const input = document.getElementById("ingredient-input").value.toLowerCase();
+            const ingredients = input.split(',').map(item => item.trim());
+
+            const filteredRecipes = recipeDatabase.filter(recipe => { //It filters through a list of recipes (recipeDatabase) and checks if any ingredient entered by the user matches an ingredient in each recipe.
+
+                return ingredients.some(ingredient => recipe.ingredients.includes(ingredient));
+            });
+
+            displayRecipes(filteredRecipes);//it displays the filtered recipes 
+        }
+
+        function displayRecipes(recipes) { //function that displays the recipes on the webpage.
+            const recipeList = document.getElementById("recipe-list"); //It gets the recipe-list element from the html.
+            recipeList.innerHTML = "";
+
+            if (recipes.length === 0) { //If no recipes are found, it displays a message saying .
+                recipeList.innerHTML = "<p>No recipes found with those ingredients.</p>";
+                return;
+            }
+
+            recipes.forEach(recipe => { // it creat recipe card for each recipe
+                const recipeCard = document.createElement("div");
+                recipeCard.className = "recipe-card";//It creates a div element with the class name recipe-card.
+                recipeCard.innerHTML = ` /*template literal it allow to work with string and variables in a more readable way. */
+                    <img src="${recipe.image}" alt="${recipe.name}">
+                    <h3>${recipe.name}</h3>
+                    <p><strong>Ingredients:</strong> ${recipe.ingredients.join(", ")}</p>
+                    <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+                `;
+                recipeList.appendChild(recipeCard);//
+            });
+        }
+        window.onload = function () {
+            displayRecipes(recipeDatabase);
+        };
+
+        document.getElementById("ingredient-input").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                findRecipes();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
