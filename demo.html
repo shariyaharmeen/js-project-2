@@ -324,27 +324,27 @@
             const input = document.getElementById("ingredient-input").value.toLowerCase();
             const ingredients = input.split(',').map(item => item.trim());
 
-            const filteredRecipes = recipeDatabase.filter(recipe => { 
+            const filteredRecipes = recipeDatabase.filter(recipe => { //It filters through a list of recipes (recipeDatabase) and checks if any ingredient entered by the user matches an ingredient in each recipe.
 
                 return ingredients.some(ingredient => recipe.ingredients.includes(ingredient));
             });
 
-            displayRecipes(filteredRecipes); 
+            displayRecipes(filteredRecipes);//it displays the filtered recipes 
         }
 
-        function displayRecipes(recipes) { 
-            const recipeList = document.getElementById("recipe-list");
+        function displayRecipes(recipes) { //function that displays the recipes on the webpage.
+            const recipeList = document.getElementById("recipe-list"); //It gets the recipe-list element from the html.
             recipeList.innerHTML = "";
 
-            if (recipes.length === 0) {
+            if (recipes.length === 0) { //If no recipes are found, it displays a message saying .
                 recipeList.innerHTML = "<p>No recipes found with those ingredients.</p>";
                 return;
             }
 
-            recipes.forEach(recipe => { 
+            recipes.forEach(recipe => { // it creat recipe card for each recipe
                 const recipeCard = document.createElement("div");
-                recipeCard.className = "recipe-card";
-                recipeCard.innerHTML = ` 
+                recipeCard.className = "recipe-card";//It creates a div element with the class name recipe-card.
+                recipeCard.innerHTML = ` /*template literal it allow to work with string and variables in a more readable way. */
                     <img src="${recipe.image}" alt="${recipe.name}">
                     <h3>${recipe.name}</h3>
                     <p><strong>Ingredients:</strong> ${recipe.ingredients.join(", ")}</p>
